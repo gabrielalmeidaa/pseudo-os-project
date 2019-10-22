@@ -13,7 +13,3 @@ class QueueManager
     end
 
 end
-
-q = QueueManager.new
-puts(q)
-puts(q.get_current_number_of_processes())

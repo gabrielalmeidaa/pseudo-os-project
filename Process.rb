@@ -3,13 +3,13 @@ class ProcessManager # I wanted to name this class 'Process', but it seems it is
     def initialize(line, id)
         tokens = line.split(',')
         @process_id = id
-        @entry_time = token[0]
-        @priority = token[1]
-        @block_size = token[3]
-        @printer_requested = token[4]
-        @scanner_requested = token[5]
-        @modem_requested = token[6]
-        @disk_requested = token[7]
+        @entry_time = tokens[0]
+        @priority = tokens[1]
+        @block_size = tokens[3]
+        @printer_requested = tokens[4]
+        @scanner_requested = tokens[5]
+        @modem_requested = tokens[6]
+        @disk_requested = tokens[7]
 
         @memory_offset = "?????" # I actually don't know what that's supposed to be
     end

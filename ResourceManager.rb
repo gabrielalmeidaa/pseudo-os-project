@@ -1,11 +1,13 @@
 class ResourceManager
+  AVAILABLE = 'available'
+  DISABLED = 'disabled'
+
     def initialize
-        # True indicates that the resource is available
-        @scanner = True
-        @printer_1 = True
-        @printer_2 = True
-        @modem = True
-        @sata_1 = True
-        @sata_2 = True
+        @scanner = AVAILABLE
+        @printer_1 = AVAILABLE
+        @printer_2 = AVAILABLE
+        @modem = AVAILABLE
+        @sata_1 = AVAILABLE
+        @sata_2 = AVAILABLE
     end
 end

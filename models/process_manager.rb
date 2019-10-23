@@ -15,13 +15,13 @@ class ProcessManager # I wanted to name this class 'Process', but it seems it is
     end
 
     def show_process
-        puts "dispatcher =>\n
-                pid: #{@process_id},\n
-                priority: #{@priority},\n
-                memory offset: #{@memory_offset},\n
-                reserved memory size: #{@block_size},\n
+        puts "dispatcher =>
+                pid: #{@process_id},
+                priority: #{@priority},
+                memory offset: #{@memory_offset},
+                reserved memory size: #{@block_size},
                 printer used: #{@printer_requested},
-                drivers used: ...\n
+                drivers used: ...
             "
     end
 

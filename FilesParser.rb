@@ -9,7 +9,6 @@ class FilesParser
 
   def self.parse_lines(lines)
     total_blocks_occupied = lines[1].to_i
-    p build_operations(lines, total_blocks_occupied)
 
     {
       total_blocks_quantity: lines[0].to_i,
@@ -54,5 +53,3 @@ class FilesParser
     token&.tr("\n", '')
   end
 end
-
-FilesParser.parse_files('./files.txt')

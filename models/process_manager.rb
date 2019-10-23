@@ -1,17 +1,15 @@
 class ProcessManager # I wanted to name this class 'Process', but it seems it is a reserved word
     # Returns a process instance based on any line read from the input.txt
-    def initialize(line, id)
-        tokens = line.split(',')
+    def initialize(id, entry_time, priority, memory_offset, block_size, printer_requested, scanner_requested, modem_requested, disk_requested)
         @process_id = id
-        @entry_time = tokens[0]
-        @priority = tokens[1]
-        @block_size = tokens[3]
-        @printer_requested = tokens[4]
-        @scanner_requested = tokens[5]
-        @modem_requested = tokens[6]
-        @disk_requested = tokens[7]
-
-        @memory_offset = "?????" # I actually don't know what that's supposed to be
+        @entry_time = entry_time
+        @priority = priority
+        @memory_offset = memory_offset
+        @block_size = block_size
+        @printer_requested = printer_requested
+        @scanner_requested = scanner_requested
+        @modem_requested = modem_requested
+        @disk_requested = disk_requested
     end
 
     def show_process
@@ -21,7 +19,7 @@ class ProcessManager # I wanted to name this class 'Process', but it seems it is
                 memory offset: #{@memory_offset},
                 reserved memory size: #{@block_size},
                 printer used: #{@printer_requested},
-                drivers used: ...
+                drivers used: [#{@scanner_requested}, #{@modem_requested}, #{@disk_requested}]
             "
     end
 

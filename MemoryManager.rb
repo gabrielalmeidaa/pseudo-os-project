@@ -8,6 +8,4 @@ class MemoryManager
     def get_current_available_memory
         return @real_time_available_blocks + @user_process_available_blocks
     end
-
-
 end

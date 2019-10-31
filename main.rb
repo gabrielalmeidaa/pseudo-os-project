@@ -12,6 +12,3 @@ def read_processes(filename)
     end
     return processes
 end
-
-
-processes = read_processes('processes.txt')

@@ -1,14 +1,6 @@
-require_relative './models/process_manager'
+require_relative './so/so'
 
-def read_processes(filename)
-    processes = []
-    file = File.open(filename)
-    lines = file.read.split("\n")
-    id = 0
+processes_file_path = './samples/files.txt'
+files_file_path = './samples/processes.txt'
 
-    for line in lines do         
-        processes.push(ProcessManager.new(line,id))
-        id += 1
-    end
-    return processes
-end
+CONTEXT = SO::Context.new(processes_file_path, files_file_path)

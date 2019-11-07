@@ -14,17 +14,6 @@ class ProcessParser
         return processes
     end
 
-    def self.find_process(pid)
-        processes = get_processes('processes.txt')
-        for process in processes do
-            if process.process_id == pid
-                return process
-            end
-        end
-        
-        return nil
-    end
-
     def self.parse_process(id, line)
         tokens = line.split(",")
         entry_time = tokens[0]

@@ -1,4 +1,7 @@
-class FilesParser
+require_relative '../models/so_file'
+require_relative '../models/operation'
+
+class FileSystemParser
   def self.parse_files(path)
     file = File.open(path)
     lines = File.readlines(file)
@@ -13,7 +16,7 @@ class FilesParser
     {
       total_blocks_quantity: lines[0].to_i,
       total_blocks_occupied: total_blocks_occupied,
-      blocks: build_blocks(lines, total_blocks_occupied),
+      so_files: build_blocks(lines, total_blocks_occupied),
       operations: build_operations(lines, total_blocks_occupied)
     }
   end
@@ -25,11 +28,11 @@ class FilesParser
     (blocks_beggining...blocks_final).map do |block_index|
       tokens = lines[block_index].split(',')
 
-      {
+      SoFile.new(
         file_name: normalize_token(tokens[0]),
         blocks_occupied: normalize_token(tokens[1]).to_i,
         blocks_quantity: normalize_token(tokens[2]).to_i
-      }
+      )
     end
   end
 
@@ -39,13 +42,13 @@ class FilesParser
     (operations_beggining...lines.length).map do |operation_index|
       tokens = lines[operation_index].split(',')
 
-      {
+      Operation.new(
         process_id: normalize_token(tokens[0]).to_i,
         operation_code: normalize_token(tokens[1]).to_i,
-        filename: normalize_token(tokens[2]),
+        filename: normalize_token(tokens[2]).tr(' ', ''),
         if_create: normalize_token(tokens[3]).to_i,
         number_process_op: normalize_token(tokens[4]).to_i
-      }
+      )
     end
   end
 

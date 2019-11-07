@@ -53,3 +53,4 @@ class FilesParser
     token&.tr("\n", '')
   end
 end
+

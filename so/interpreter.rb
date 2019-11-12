@@ -1,7 +1,10 @@
+require './so/so'
+
 class Interpreter
-    def initialize(operations, processes)
-        @operations = operations
-        @processes = processes
+    def initialize(path)
+        @operating_system_context = SO::Context.new(path) 
+        @operations = @operating_system_context.operations
+        @processes = @operating_system_context.processes
         @operations_by_process = build_operations_by_process(@operations)
     end
 

@@ -37,19 +37,33 @@ class FileSystemParser
   end
 
   def self.build_operations(lines, total_blocks_occupied)
-    operations_beggining = total_blocks_occupied + 3
+    blocks_beggining = 2
+    operations_beggining = total_blocks_occupied + blocks_beggining
 
     (operations_beggining...lines.length).map do |operation_index|
       tokens = lines[operation_index].split(',')
-
-      Operation.new(
-        process_id: normalize_token(tokens[0]).to_i,
-        operation_code: normalize_token(tokens[1]).to_i,
-        filename: normalize_token(tokens[2]).tr(' ', ''),
-        if_create: normalize_token(tokens[3]).to_i,
-        number_process_op: normalize_token(tokens[4]).to_i
-      )
+      normalize_token(tokens[1]).to_i == 0 ? build_create_operation(tokens) : build_delete_operation(tokens)
     end
+  end
+
+  def self.build_create_operation(tokens)
+    Operation.new(
+      process_id: normalize_token(tokens[0]).to_i,
+      operation_code: normalize_token(tokens[1]).to_i,
+      filename: normalize_token(tokens[2]).tr(' ', ''),
+      if_create: normalize_token(tokens[3]).to_i,
+      number_process_op: normalize_token(tokens[4]).to_i
+    )
+  end
+
+  def self.build_delete_operation(tokens)
+    Operation.new(
+      process_id: normalize_token(tokens[0]).to_i,
+      operation_code: normalize_token(tokens[1]).to_i,
+      filename: nil,
+      if_create: normalize_token(tokens[2]).to_i,
+      number_process_op: normalize_token(tokens[3]).to_i
+    )
   end
 
   def self.normalize_token(token)

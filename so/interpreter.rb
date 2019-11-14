@@ -1,8 +1,12 @@
 require './so/so'
+require './models/operation'
 
 class Interpreter
-    def initialize(path)
-        @operating_system_context = SO::Context.new(path) 
+    CREATE_OP = 0
+    DELETE_OP = 1
+
+    def initialize(processes_path, files_path)
+        @operating_system_context = SO::Context.new(processes_path, files_path) 
         @operations = @operating_system_context.operations
         @processes = @operating_system_context.processes
         @operations_by_process = build_operations_by_process(@operations)
@@ -24,7 +28,6 @@ class Interpreter
         (0..operations.last.number_process_op).each do |idx|
             batch.append(find_operation_by_process_op(operations, idx))
         end
-
         return batch
     end
 
@@ -32,7 +35,8 @@ class Interpreter
         operations.each do |operation|
             return operation if operation.number_process_op == number_op
         end
-        return nil
+
+        return Operation.create_empty_operation(number_op)
     end
 
     def group_operations_by_process(operations)
@@ -47,6 +51,51 @@ class Interpreter
     end
 
     def execute()
-        p "To be implemented."
+        while not program_finished?
+            current_process = get_next_process() # We should probably get this from the Process Scheduler
+            current_process.show_process()
+            round_robin_ticks = 1
+            @operations_by_process[current_process.process_id].each do |operation|
+                operation.print_information(current_process, round_robin_ticks)
+                if round_robin_ticks > current_process.processing_time
+                    operation.print_error_by_exceeded_time(current_process)
+                else
+                    if operation.operation_code == CREATE_OP
+                        execute_create_file_operation(current_process, operation)
+                    else
+                        execute_delete_file_operation(current_process, operation)
+                    end
+                end
+                round_robin_ticks += 1
+            end
+            byebug
+        end
     end
+
+    def execute_create_file_operation(process, operation)
+        available_start_block = @operating_system_context.find_block_for_file(operation.if_create)
+        if available_start_block
+            @operating_system_context.create_file(operation.filename, available_start_block, operation.if_create)
+        else
+            operation.print_error_by_not_enough_blocks()
+        end
+    end
+
+    def execute_delete_file_operation(process, operation)
+    end
+
+    def program_finished?
+        false
+    end
+ 
+    def get_next_process
+        return find_process_by_id(0)
+    end
+
+    def find_process_by_id(id)
+        @processes.each do |process|
+            return process if process.process_id == id
+        end
+    end
+
 end

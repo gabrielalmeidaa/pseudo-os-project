@@ -7,9 +7,9 @@ module SO
     attr_reader :memory_blocks
     attr_reader :operations
 
-    def initialize(context_path)
-      @processes = ProcessParser.get_processes(context_path)
-      file_system = FileSystemParser.parse_files(context_path)
+    def initialize(processes_path, files_path)
+      @processes = ProcessParser.get_processes(processes_path)
+      file_system = FileSystemParser.parse_files(files_path)
       @operations = file_system[:operations]
       @memory_blocks = build_memory_blocks(file_system)
     end
@@ -31,6 +31,23 @@ module SO
       end
 
       memory
+    end
+    
+    def find_block_for_file(size)
+      bitmap_memory_string = get_bitmap_memory.join("")
+      composed_bitmap = bitmap_memory_string + bitmap_memory_string
+      return composed_bitmap.index("000")
+    end
+
+    def get_bitmap_memory
+      @memory_blocks.map{ |block_index| block_index == nil ? 0 : 1  }
+    end
+
+    def create_file(filename, start_index, file_size)
+      memory_size = memory_blocks.length
+      (start_index... start_index + file_size).each do |index|
+        @memory_blocks[index%memory_size] = filename
+      end
     end
 
     def dump_memory

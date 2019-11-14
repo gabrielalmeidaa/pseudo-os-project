@@ -5,10 +5,12 @@ module SO
   class Context
     attr_reader :processes
     attr_reader :memory_blocks
+    attr_reader :operations
 
     def initialize(context_path)
       @processes = ProcessParser.get_processes(context_path)
       file_system = FileSystemParser.parse_files(context_path)
+      @operations = file_system[:operations]
       @memory_blocks = build_memory_blocks(file_system)
     end
 

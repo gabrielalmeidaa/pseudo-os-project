@@ -9,3 +9,4 @@ class MemoryManager
         return @real_time_available_blocks + @user_process_available_blocks
     end
 end
+

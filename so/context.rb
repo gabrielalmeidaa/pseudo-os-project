@@ -81,12 +81,17 @@ module SO
       return false if current_process.priority == 0
       preemptable_process = @queues.next
       if preemptable_process && preemptable_process.priority.to_i < current_process.priority.to_i
-        @queue_manager.queue_process(current_process) # Adicionar aging.
+        current_process.increase_priority()
+        @queues.queue_process(current_process)
+        puts("P#{current_process.process_id} foi preemptado! Sua nova prioridade é #{current_process.priority}.")
         return true
       end
     end
-  
     
+    def finish_program?
+      (@unscheduled_processes.length + @queues.get_current_number_of_processes) == 0
+    end
+
     def dump_memory
       p memory_blocks
     end

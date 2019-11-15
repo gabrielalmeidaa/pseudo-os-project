@@ -20,6 +20,10 @@ class ProcessManager # I wanted to name this class 'Process', but it seems it is
         @pc + 1 > @processing_time 
     end
 
+    def increase_priority
+        @priority = @priority - 1 if @priority > 1
+    end
+
     def show_process
         puts "dispatcher =>
                 pid: #{@process_id},

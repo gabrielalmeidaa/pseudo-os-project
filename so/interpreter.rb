@@ -10,7 +10,7 @@ class Interpreter
         @operations = @operating_system_context.operations
         @processes = @operating_system_context.processes
         @operations_by_process = build_operations_by_process(@operations)
-        @execution_time_unit = 2
+        @execution_time_unit = 0
     end
 
     def build_operations_by_process(operations)
@@ -55,8 +55,12 @@ class Interpreter
         while not program_finished?
             @operating_system_context.schedule_processes(@execution_time_unit)
             current_process = @operating_system_context.get_next_scheduled_process()
-            (@execution_time_unit+=1 && @operating_system_context.schedule_processes(@execution_time_unit) && next) if current_process.nil?
-            execute_process_operations(current_process)
+            if current_process.nil?
+                @execution_time_unit+=1
+                @operating_system_context.schedule_processes(@execution_time_unit)
+            else
+                execute_process_operations(current_process)
+            end
         end
     end
 
@@ -101,17 +105,7 @@ class Interpreter
     end
 
     def program_finished?
-        false
-    end
- 
-    def get_next_process
-        return find_process_by_id(0)
-    end
-
-    def find_process_by_id(id)
-        @processes.each do |process|
-            return process if process.process_id == id
-        end
+        @operating_system_context.finish_program?
     end
 
 end

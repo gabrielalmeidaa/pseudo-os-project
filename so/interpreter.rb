@@ -10,6 +10,7 @@ class Interpreter
         @operations = @operating_system_context.operations
         @processes = @operating_system_context.processes
         @operations_by_process = build_operations_by_process(@operations)
+        @execution_time_unit = 0
     end
 
     def build_operations_by_process(operations)
@@ -52,23 +53,27 @@ class Interpreter
 
     def execute()
         while not program_finished?
-            current_process = get_next_process() # We should probably get this from the Process Scheduler
+            current_process = @operating_system_context.schedule_processes(@execution_time_unit) # We should probably get this from the Process Scheduler
             current_process.show_process()
-            round_robin_ticks = 1
-            @operations_by_process[current_process.process_id].each do |operation|
-                if round_robin_ticks > current_process.processing_time
-                    operation.print_error_by_exceeded_time(current_process)
-                    break
+            @execution_time_unit+=1 && next if current_process.nil?
+            execute_process_operations(current_process)
+        end
+    end
+
+    def execute_process_operations(current_process)
+        @operations_by_process[current_process.process_id][(current_process.pc)..-1].each do |operation|
+            if current_process.exceeded_processing_time?
+                operation.print_error_by_exceeded_time(current_process)
+                break
+            else
+                if operation.operation_code == CREATE_OP
+                    execute_create_file_operation(current_process, operation)
                 else
-                    if operation.operation_code == CREATE_OP
-                        execute_create_file_operation(current_process, operation)
-                    else
-                        execute_delete_file_operation(current_process, operation)
-                    end
+                    execute_delete_file_operation(current_process, operation)
                 end
-                round_robin_ticks += 1
+                current_process.pc += 1
             end
-            byebug
+            @execution_time_unit += 1
         end
     end
 

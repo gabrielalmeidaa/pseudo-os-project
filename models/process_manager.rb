@@ -1,6 +1,6 @@
 
 class ProcessManager # I wanted to name this class 'Process', but it seems it is a reserved word
-    attr_accessor :process_id, :processing_time
+    attr_accessor :process_id, :processing_time, :pc, :entry_time, :priority
 
     # Returns a process instance based on any line read from the input.txt
     def initialize(id, entry_time, priority, processing_time, block_size, printer_requested, scanner_requested, modem_requested, disk_requested)
@@ -13,6 +13,11 @@ class ProcessManager # I wanted to name this class 'Process', but it seems it is
         @scanner_requested = scanner_requested
         @modem_requested = modem_requested
         @disk_requested = disk_requested
+        @pc = 0
+    end
+
+    def exceeded_processing_time?
+        @pc + 1 > @processing_time 
     end
 
     def show_process

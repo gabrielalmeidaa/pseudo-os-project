@@ -1,5 +1,6 @@
 require_relative '../parsers/process_parser.rb'
 require_relative '../parsers/file_system_parser.rb'
+require_relative '../models/queue_manager.rb'
 
 module SO
   class Context
@@ -9,9 +10,11 @@ module SO
 
     def initialize(processes_path, files_path)
       @processes = ProcessParser.get_processes(processes_path)
+      @unscheduled_processes = @processes.clone.sort_by { |process| process.entry_time }
       file_system = FileSystemParser.parse_files(files_path)
       @operations = file_system[:operations]
       @memory_blocks = build_memory_blocks(file_system)
+      @queues = QueueManager.new()
     end
 
     private def build_memory_blocks(file_system)
@@ -58,8 +61,23 @@ module SO
       @memory_blocks = @memory_blocks.map{ |block_index| block_index == filename ? nil : block_index}
     end
 
+    def schedule_processes(time_unit)
+      push_arriving_processes(time_unit)
+      return @queues.pop
+    end
+
+    def push_arriving_processes(time_unit)
+      arriving_processes = @unscheduled_processes.take_while{|process| process.entry_time == time_unit}
+      @unscheduled_processes = @unscheduled_processes - arriving_processes
+      arriving_processes.each do |process|
+        @queues.queue_process(process)
+      end
+    end
+  
+    
     def dump_memory
       p memory_blocks
     end
+
   end
 end

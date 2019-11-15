@@ -60,8 +60,8 @@ class FileSystemParser
     Operation.new(
       process_id: normalize_token(tokens[0]).to_i,
       operation_code: normalize_token(tokens[1]).to_i,
-      filename: nil,
-      if_create: normalize_token(tokens[2]).to_i,
+      filename: normalize_token(tokens[2]).tr(' ', ''),
+      if_create: nil,
       number_process_op: normalize_token(tokens[3]).to_i
     )
   end

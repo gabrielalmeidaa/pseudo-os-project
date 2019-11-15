@@ -56,9 +56,9 @@ class Interpreter
             current_process.show_process()
             round_robin_ticks = 1
             @operations_by_process[current_process.process_id].each do |operation|
-                operation.print_information(current_process, round_robin_ticks)
                 if round_robin_ticks > current_process.processing_time
                     operation.print_error_by_exceeded_time(current_process)
+                    break
                 else
                     if operation.operation_code == CREATE_OP
                         execute_create_file_operation(current_process, operation)
@@ -76,12 +76,19 @@ class Interpreter
         available_start_block = @operating_system_context.find_block_for_file(operation.if_create)
         if available_start_block
             @operating_system_context.create_file(operation.filename, available_start_block, operation.if_create)
+            operation.print_file_created_successfully(process, operation.filename)
         else
-            operation.print_error_by_not_enough_blocks()
+            operation.print_error_by_not_enough_blocks(process, operation.filename)
         end
     end
 
     def execute_delete_file_operation(process, operation)
+        if @operating_system_context.is_file_allocated?(operation.filename)
+            @operating_system_context.delete_file(operation.filename)
+            operation.print_deleted_sucessfully(process, operation.filename)
+        else
+            operation.print_delete_error_file_not_found(process, operation.filename)
+        end
     end
 
     def program_finished?

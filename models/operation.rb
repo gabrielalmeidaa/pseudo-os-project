@@ -37,4 +37,19 @@ class Operation
       O processo #{process.process_id} esgotou o seu tempo de CPU!"
   end
 
+  def print_file_created_successfully(process, filename)
+    puts "P#{process.process_id} instruction #{@number_process_op} - SUCESSO
+      O processo #{process.process_id} criou o arquivo #{filename} com sucesso!" 
+  end
+
+  def print_error_by_not_enough_blocks(process, filename)
+    puts "P#{process.process_id} instruction #{@number_process_op} - FALHA
+      O processo #{process.process_id} não pode criar o arquivo #{filename} por falta de espaço!" 
+  end
+
+  def print_delete_error_file_not_found(process, filename)
+    puts "P#{process.process_id} instruction #{@number_process_op} - FALHA
+      O processo #{process.process_id} não pode deletar o arquivo #{filename} pois ele não foi encontrado!" 
+  end
+
 end

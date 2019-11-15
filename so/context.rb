@@ -50,6 +50,14 @@ module SO
       end
     end
 
+    def is_file_allocated?(filename)
+      @memory_blocks.index(filename) != nil ? true : false
+    end
+
+    def delete_file(filename)
+      @memory_blocks = @memory_blocks.map{ |block_index| block_index == filename ? nil : block_index}
+    end
+
     def dump_memory
       p memory_blocks
     end

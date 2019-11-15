@@ -52,4 +52,9 @@ class Operation
       O processo #{process.process_id} não pode deletar o arquivo #{filename} pois ele não foi encontrado!" 
   end
 
+  def print_deleted_successfully(process, filename)
+    puts "P#{process.process_id} instruction #{@number_process_op} - SUCESSO
+      O processo #{process.process_id} deletou o arquivo #{filename} com sucesso!" 
+  end
+
 end

@@ -94,7 +94,7 @@ class Interpreter
     def execute_delete_file_operation(process, operation)
         if @operating_system_context.is_file_allocated?(operation.filename)
             @operating_system_context.delete_file(operation.filename)
-            operation.print_deleted_sucessfully(process, operation.filename)
+            operation.print_deleted_successfully(process, operation.filename)
         else
             operation.print_delete_error_file_not_found(process, operation.filename)
         end

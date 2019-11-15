@@ -27,10 +27,10 @@ class QueueManager
     end
 
     def pop
-        return @real_time_queue.shift             if @real_time_queue.empty?
-        return @user_process_queue[:high].shift   if @user_process_queue[:high].empty?
-        return @user_process_queue[:medium].shift if @user_process_queue[:medium].empty?
-        return @user_process_queue[:low].shift    if @user_process_queue[:low].empty?
+        return @real_time_queue.shift             unless @real_time_queue.empty?
+        return @user_process_queue[:high].shift   unless @user_process_queue[:high].empty?
+        return @user_process_queue[:medium].shift unless @user_process_queue[:medium].empty?
+        return @user_process_queue[:low].shift    unless @user_process_queue[:low].empty?
     end
 
     def next

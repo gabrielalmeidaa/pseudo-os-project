@@ -70,11 +70,9 @@ module SO
     end
 
     def push_arriving_processes(time_unit)
-      byebug
       arriving_processes = @unscheduled_processes.take_while{|process| process.entry_time == time_unit }
       @unscheduled_processes = @unscheduled_processes - arriving_processes
       arriving_processes.each do |process|
-        byebug
         @queues.queue_process(process)
       end
     end

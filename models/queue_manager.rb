@@ -32,4 +32,11 @@ class QueueManager
         return @user_process_queue[:medium].shift if @user_process_queue[:medium].empty?
         return @user_process_queue[:low].shift    if @user_process_queue[:low].empty?
     end
+
+    def next
+        return @real_time_queue.first             if @real_time_queue.empty?
+        return @user_process_queue[:high].first   if @user_process_queue[:high].empty?
+        return @user_process_queue[:medium].first if @user_process_queue[:medium].empty?
+        return @user_process_queue[:low].first    if @user_process_queue[:low].empty?
+    end
 end

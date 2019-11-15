@@ -16,8 +16,8 @@ class ProcessParser
 
     def self.parse_process(id, line)
         tokens = line.split(",")
-        entry_time = tokens[0]
-        priority = tokens[1]
+        entry_time = tokens[0].to_i
+        priority = tokens[1].to_i
         processing_time = tokens[2]
         block_size = tokens[3]
         printer_requested = tokens[4]

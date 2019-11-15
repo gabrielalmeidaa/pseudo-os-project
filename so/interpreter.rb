@@ -10,7 +10,7 @@ class Interpreter
         @operations = @operating_system_context.operations
         @processes = @operating_system_context.processes
         @operations_by_process = build_operations_by_process(@operations)
-        @execution_time_unit = 0
+        @execution_time_unit = 2
     end
 
     def build_operations_by_process(operations)
@@ -53,14 +53,16 @@ class Interpreter
 
     def execute()
         while not program_finished?
-            current_process = @operating_system_context.schedule_processes(@execution_time_unit) # We should probably get this from the Process Scheduler
-            current_process.show_process()
-            @execution_time_unit+=1 && next if current_process.nil?
+            @operating_system_context.schedule_processes(@execution_time_unit)
+            current_process = @operating_system_context.get_next_scheduled_process()
+            (@execution_time_unit+=1 && @operating_system_context.schedule_processes(@execution_time_unit) && next) if current_process.nil?
             execute_process_operations(current_process)
         end
     end
 
     def execute_process_operations(current_process)
+        current_process.show_process()
+
         @operations_by_process[current_process.process_id][(current_process.pc)..-1].each do |operation|
             if current_process.exceeded_processing_time?
                 operation.print_error_by_exceeded_time(current_process)
@@ -74,6 +76,8 @@ class Interpreter
                 current_process.pc += 1
             end
             @execution_time_unit += 1
+            @operating_system_context.schedule_processes(@execution_time_unit)
+            return if @operating_system_context.activate_preemption?(current_process)
         end
     end
 

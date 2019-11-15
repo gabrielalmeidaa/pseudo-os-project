@@ -61,16 +61,30 @@ module SO
       @memory_blocks = @memory_blocks.map{ |block_index| block_index == filename ? nil : block_index}
     end
 
+    def get_next_scheduled_process()
+      return @queues.pop
+    end
+    
     def schedule_processes(time_unit)
       push_arriving_processes(time_unit)
-      return @queues.pop
     end
 
     def push_arriving_processes(time_unit)
-      arriving_processes = @unscheduled_processes.take_while{|process| process.entry_time == time_unit}
+      byebug
+      arriving_processes = @unscheduled_processes.take_while{|process| process.entry_time == time_unit }
       @unscheduled_processes = @unscheduled_processes - arriving_processes
       arriving_processes.each do |process|
+        byebug
         @queues.queue_process(process)
+      end
+    end
+
+    def activate_preemption?(current_process)
+      return false if current_process.priority == 0
+      preemptable_process = @queues.next
+      if preemptable_process && preemptable_process.priority.to_i < current_process.priority.to_i
+        @queue_manager.queue_process(current_process) # Adicionar aging.
+        return true
       end
     end
   
